@@ -56,7 +56,7 @@ products.forEach((products) => {
             `;
 });
 
-document.querySelector('.js-products-frid').innerHTML = productHTML;
+document.querySelector('.js-products-grid').innerHTML = productHTML;
 
 function updateCartQuantity() {
   let cartQuantity = 0;
