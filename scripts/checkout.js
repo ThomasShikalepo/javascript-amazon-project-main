@@ -1,5 +1,6 @@
 import { cart } from "../data/cart.js";
 import { products } from "../data/products.js";
+import { formatCurrency } from "./utils/money.js";
 
 let cartSummaryHTML = '';
 
@@ -51,7 +52,7 @@ cart.forEach(
                         type="radio"
                         checked
                         class="delivery-option-input"
-                        name="delivery-option-1"
+                        name="delivery-option-${matchingProducts.id}"
                     />
                     <div>
                         <div class="delivery-option-date">Tuesday, June 21</div>
@@ -62,7 +63,7 @@ cart.forEach(
                     <input
                         type="radio"
                         class="delivery-option-input"
-                        name="delivery-option-1"
+                        name="delivery-option-${matchingProducts.id}"
                     />
                     <div>
                         <div class="delivery-option-date">Wednesday, June 15</div>
@@ -73,7 +74,7 @@ cart.forEach(
                     <input
                         type="radio"
                         class="delivery-option-input"
-                        name="delivery-option-1"
+                        name="delivery-option-${matchingProducts.id}"
                     />
                     <div>
                         <div class="delivery-option-date">Monday, June 13</div>
@@ -86,6 +87,7 @@ cart.forEach(
         `
 
         console.log(cartSummaryHTML)
+        console.log(formatCurrency(matchingProducts.priceCents))
 
     })
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML
