@@ -3,6 +3,7 @@ import { products } from "../data/products.js";
 
 
 let cartSummaryHTML = '';
+let cartQuantity = 0;
 
 cart.forEach(
     (cartItem) => {
@@ -16,6 +17,8 @@ cart.forEach(
                 }
             }
         );
+
+        cartQuantity += cartItem.quantity;
 
         cartSummaryHTML += `<div class="cart-item-container js-cart-item-container-${matchingProducts.id}">
                 <div class="delivery-date">Delivery date: Tuesday, June 21</div>
@@ -91,6 +94,8 @@ cart.forEach(
     })
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML
 
+document.querySelector('.js-display-cart-quontity').innerHTML = `${cartQuantity} items`
+
 document.querySelectorAll('.js-delete-link').forEach(
     (link) => {
         link.addEventListener('click', () => {
@@ -100,7 +105,20 @@ document.querySelectorAll('.js-delete-link').forEach(
 
             const container = document.querySelector(
                 `.js-cart-item-container-${productId}`);
-            container.remove();
+
+            if (container) {
+                container.remove();
+            }
+
+            let updateCartQuantity = 0;
+
+            cart.forEach(
+                (items) => {
+                    //recalculating the cart quantity after an item is removed
+                    updateCartQuantity += items.quantity;
+                }
+            );
+            document.querySelector('.js-display-cart-quontity').innerHTML = `${updateCartQuantity} items`;
         });
     }
 )
