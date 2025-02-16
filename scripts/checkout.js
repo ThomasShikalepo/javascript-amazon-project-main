@@ -1,5 +1,6 @@
 import { cart, removeFromCart } from "../data/cart.js";
 import { products } from "../data/products.js";
+import { formatCurrency } from "./utils/money.js";
 
 
 let cartSummaryHTML = '';
@@ -33,12 +34,14 @@ cart.forEach(
                     <div class="product-name">
                     ${matchingProducts.name}
                     </div>
-                    <div class="product-price">${(matchingProducts.priceCents / 100).toFixed(2)}</div>
+                    <div class="product-price">${formatCurrency(matchingProducts.priceCents)}</div>
                     <div class="product-quantity">
                     <span> Quantity: <span class="quantity-label">${cartItem.quantity}</span> </span>
-                    <span class="update-quantity-link link-primary">
+                    <span class="update-quantity-link link-primary js-update-link" data-product-id = ${matchingProducts.id}>
                         Update
                     </span>
+                    <input type="text" class="quantity-input js-quantity-input-${matchingProducts.id}">
+                    <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id = ${matchingProducts.id}>Save</span>
                     <span class="delete-quantity-link link-primary js-delete-link" data-product-id = ${matchingProducts.id}>
                         Delete
                     </span>
@@ -94,7 +97,7 @@ cart.forEach(
     })
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML
 
-document.querySelector('.js-display-cart-quontity').innerHTML = `${cartQuantity} items`
+document.querySelector('.js-display-cart-quantity').innerHTML = `${cartQuantity} items`
 
 document.querySelectorAll('.js-delete-link').forEach(
     (link) => {
@@ -118,7 +121,76 @@ document.querySelectorAll('.js-delete-link').forEach(
                     updateCartQuantity += items.quantity;
                 }
             );
-            document.querySelector('.js-display-cart-quontity').innerHTML = `${updateCartQuantity} items`;
+            document.querySelector('.js-display-cart-quantity').innerHTML = `${updateCartQuantity} items`;
         });
     }
 )
+
+document.querySelectorAll('.js-update-link').forEach(
+    link => {
+        link.addEventListener(
+            'click', () => {
+                const productId = link.dataset.productId;
+
+
+
+                const container = document.querySelector(`.js-cart-item-container-${productId}`);
+
+                container.classList.add('is-editing-quantity');
+            }
+        )
+
+
+    }
+)
+
+document.querySelectorAll('.js-save-quantity-link').
+    forEach(
+        (link) => {
+
+            link.addEventListener(
+                'click', () => {
+                    const productId = link.dataset.productId;
+
+                    const container = document.querySelector(
+                        `.js-cart-item-container-${productId}`
+                    );
+                    container.classList.remove('is-editing-quantity');
+                }
+            )
+
+        }
+    )
+
+document.querySelectorAll('.js-update-link').forEach(
+    (link) => {
+        link.addEventListener(
+            'click', () => {
+                const productId = link.dataset.productId;
+
+                const container = document.querySelector(`js-quantity-input-${productId}`);
+
+                container.classList.add('is-editing-quantity')
+            }
+        )
+    }
+)
+
+document.querySelectorAll('.js-save-quantity-link').forEach(
+    (link) => {
+        link.addEventListener(
+            'click', () => {
+                const productId = link.dataset.productId;
+
+                const container = document.querySelector(`.js-cart-item-container-${productId}`);
+
+                container.classList.remove('is-editing-quantity');
+
+                const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+                const newQuantity = Number(quantityInput.value);
+
+                console.log(newQuantity)
+            }
+        );
+    }
+);
